@@ -6,8 +6,14 @@ Help you use flutter to do port scan, so that you could find services on local a
 ```bash
   discoverpingableserviceonlocalnetwork:
     git:
-      url: git://github.com/yingshaoxo/flutter-discoverpingableserviceonlocalnetwork
+      url: https://github.com/yingshaoxo/flutter-discoverpingableserviceonlocalnetwork.git
       ref: master
+```
+
+```bash
+import 'package:discoverpingableserviceonlocalnetwork/discoverpingableserviceonlocalnetwork.dart';
+
+await Discoverpingableserviceonlocalnetwork.getWIFIaddress() as String;
 ```
 
 ## error

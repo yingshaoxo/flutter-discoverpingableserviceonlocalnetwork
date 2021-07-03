@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
             setState(() {});
             if (ipWeFound != "") {
               String? result = await Discoverpingableserviceonlocalnetwork
-                  .findAvaliableServicesInAHost(ipWeFound, 5000, 5100);
+                  .findServicesInAHost(ipWeFound, 5000, 5100);
               _platformVersion =
                   DateTime.now().toString() + (result ?? "Can't find anything");
               setState(() {});
@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
               setState(() {});
               if (ip != null) {
                 String? services = await Discoverpingableserviceonlocalnetwork
-                    .findAllServicesInANetwork(ip + "/24", 5000, 5010);
+                    .findServicesInANetwork(ip + "/24", 5000, 5010);
                 if (services != null) {
                   if (services != "") {
                     List<dynamic> data = jsonDecode(services);

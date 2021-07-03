@@ -11,7 +11,7 @@ class Discoverpingableserviceonlocalnetwork {
     return version;
   }
 
-  static Future<String?> findAvaliableServicesInAHost(
+  static Future<String?> findServicesInAHost(
       String host, int startPort, int endPort) async {
     final String? json = await _channel.invokeMethod(
         'find_services_in_a_host', <String, dynamic>{
@@ -28,7 +28,7 @@ class Discoverpingableserviceonlocalnetwork {
   }
 
 // network = "192.168.1.1/24"
-  static Future<String?> findAllServicesInANetwork(
+  static Future<String?> findServicesInANetwork(
       String network, int startPort, int endPort) async {
     final String? json = await _channel.invokeMethod(
         'find_all_services', <String, dynamic>{
