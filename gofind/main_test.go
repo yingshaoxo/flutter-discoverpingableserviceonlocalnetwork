@@ -24,7 +24,16 @@ func TestGetAllHostsFromNetwork(t *testing.T) {
 }
 
 func TestGetAllReachablePortsFromNetwork(t *testing.T) {
-	urls := ScanAllHosts("192.168.50.0/24", 5000, 5002)
+	urls := ScanAllHosts("192.168.50.0/24", 5000, 5010)
+	log.Println(urls)
+	if len(urls) < 1 {
+		t.Fatalf("we should get a lot of hosts here")
+	}
+}
+
+func TestGetAllReachablePortsFromNetwork2(t *testing.T) {
+	SetTimeOut(100)
+	urls := ScanAllHosts("192.168.50.0/16", 5000, 5010)
 	log.Println(urls)
 	if len(urls) < 1 {
 		t.Fatalf("we should get a lot of hosts here")

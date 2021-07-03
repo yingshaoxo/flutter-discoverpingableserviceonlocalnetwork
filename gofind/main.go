@@ -5,21 +5,29 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"time"
 )
 
 func SayHi() string {
 	return "Hi! yingshaoxo!"
 }
 
+var timeout time.Duration = time.Duration(1000 * 1000 * 500) // 0.5 second
+
+func SetTimeOut(millisecond int) {
+	timeout = time.Duration(1000 * 1000 * millisecond)
+}
+
 func worker(address chan string, results chan string) {
 	for uri := range address {
-		connection, err := net.Dial("tcp", uri)
+		connection, err := net.DialTimeout("tcp", uri, timeout)
 		//fmt.Println(err)
 		if err != nil {
 			results <- ""
 			continue
 		}
 		connection.Close()
+		//fmt.Println(uri)
 		results <- uri
 	}
 }
@@ -28,13 +36,23 @@ func scan_ports(hosts []string, startPort int, endPort int) []string {
 	//1-65535
 	urls := make([]string, 0)
 
-	address := make(chan string, 10000)
+	//address := make(chan string, 10000)
+	address := make(chan string, 65535)
 	results := make(chan string)
 
 	for i := 0; i < cap(address); i++ {
 		go worker(address, results) // now we have 10000 workers
 	}
 
+	/*
+		for _, host := range hosts {
+			go func(host_ string) {
+				for i := startPort; i <= endPort; i++ {
+					address <- fmt.Sprintf("%s:%d", host_, i)
+				}
+			}(host)
+		}
+	*/
 	go func() {
 		for _, host := range hosts {
 			for i := startPort; i <= endPort; i++ {
