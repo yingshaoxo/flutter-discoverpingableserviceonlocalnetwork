@@ -60,34 +60,19 @@ class _MyAppState extends State<MyApp> {
           child: Text(_platformVersion),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Text("get services"),
+          child: Text("Find"),
           onPressed: () async {
-            _platformVersion = "tapped";
-            setState(() {});
-            if (ipWeFound != "") {
-              String? result = await Discoverpingableserviceonlocalnetwork
-                  .findServicesInAHost(ipWeFound, 5000, 5100);
-              _platformVersion =
-                  DateTime.now().toString() + (result ?? "Can't find anything");
-              setState(() {});
-            } else {
-              String? ip =
-                  await Discoverpingableserviceonlocalnetwork.getWIFIaddress();
-              _platformVersion = "searching at " + (ip ?? "") + "...";
-              setState(() {});
-              if (ip != null) {
-                String? services = await Discoverpingableserviceonlocalnetwork
-                    .findServicesInANetwork(ip + "/24", 5000, 5010);
-                if (services != null) {
-                  if (services != "") {
-                    List<dynamic> data = jsonDecode(services);
-                    if (data.length > 0) {
-                      _platformVersion = "we found: " + data[0];
-                      ipWeFound = data[0].split(":")[0];
-                      setState(() {});
-                    } else {}
-                  }
-                }
+            var wifi_address =
+                await Discoverpingableserviceonlocalnetwork.getWIFIaddress();
+            if (wifi_address != null) {
+              //List<String>? hosts = await Discoverpingableserviceonlocalnetwork
+              //.findServicesInANetwork(wifi_address + "/24", 5000, 5100);
+              List<String>? hosts = await Discoverpingableserviceonlocalnetwork
+                  .findServicesInAHost(wifi_address, 0, 49151);
+              if (hosts != null) {
+                _platformVersion =
+                    "This is what I found: \n\n" + hosts.toString();
+                setState(() {});
               }
             }
           },

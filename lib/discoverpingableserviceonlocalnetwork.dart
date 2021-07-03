@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
@@ -11,7 +12,7 @@ class Discoverpingableserviceonlocalnetwork {
     return version;
   }
 
-  static Future<String?> findServicesInAHost(
+  static Future<List<String>?> findServicesInAHost(
       String host, int startPort, int endPort) async {
     final String? json = await _channel.invokeMethod(
         'find_services_in_a_host', <String, dynamic>{
@@ -20,15 +21,25 @@ class Discoverpingableserviceonlocalnetwork {
       'endPort': endPort
     });
 
-    if (json == "") {
+    if (json == "" || json == null) {
       return null;
     }
 
-    return json;
+    List<dynamic>? hostList;
+    try {
+      hostList = jsonDecode(json);
+      if (hostList != null) {
+        return hostList.map((e) => e.toString()).toList();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
   }
 
 // network = "192.168.1.1/24"
-  static Future<String?> findServicesInANetwork(
+  static Future<List<String>?> findServicesInANetwork(
       String network, int startPort, int endPort) async {
     final String? json = await _channel.invokeMethod(
         'find_all_services', <String, dynamic>{
@@ -37,11 +48,21 @@ class Discoverpingableserviceonlocalnetwork {
       'endPort': endPort
     });
 
-    if (json == "") {
+    if (json == "" || json == null) {
       return null;
     }
 
-    return json;
+    List<dynamic>? hostList;
+    try {
+      hostList = jsonDecode(json);
+      if (hostList != null) {
+        return hostList.map((e) => e.toString()).toList();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
   }
 
   static Future<String?> getWIFIaddress() async {
