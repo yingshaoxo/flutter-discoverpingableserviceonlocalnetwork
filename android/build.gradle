@@ -35,7 +35,14 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    //implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    implementation files('libs/GoFind.aar')
 }
