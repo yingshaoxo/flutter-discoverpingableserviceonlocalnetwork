@@ -21,4 +21,9 @@ Or couldn't make a aar module with another bunch of aar modules?
 
 #golang #flutter #androidStudio
 
-**I feel sorry for the update of android studio, it kills the possibility of using golang as a code base for android and ios.**
+**~~I feel sorry for the update of android studio, it kills the possibility of using golang as a code base for android and ios.~~**
+
+**Solution**: 
+
+* https://stackoverflow.com/a/57075972/8667243 
+* https://yingshaoxo.blogspot.com/2021/07/how-to-use-golang-to-make-flutter-plugin.html

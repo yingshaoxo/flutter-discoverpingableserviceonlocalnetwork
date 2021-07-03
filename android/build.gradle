@@ -18,6 +18,11 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
+        //Add this below <plugin_name> is whatever your plugin is called eg. url_launcher
+        flatDir {
+            dirs project(':discoverpingableserviceonlocalnetwork').file('libs')
+            // e.g. dirs project(':url_launcher').file('libs')  - don't miss the ':'
+        }
     }
 }
 
@@ -44,5 +49,6 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
-    implementation files('libs/GoFind.aar')
+    //implementation files('libs/GoFind.aar')
+    implementation (name: 'GoFind', ext: 'aar')
 }
