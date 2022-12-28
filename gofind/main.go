@@ -12,15 +12,9 @@ func SayHi() string {
 	return "Hi! yingshaoxo!"
 }
 
-var timeout time.Duration = time.Duration(1000 * 1000 * 500) // 0.5 second
-
-func SetTimeOut(millisecond int) {
-	timeout = time.Duration(1000 * 1000 * millisecond)
-}
-
-func worker(address chan string, results chan string) {
+func worker(address chan string, results chan string, timeout_in_milliseconds int) {
 	for uri := range address {
-		connection, err := net.DialTimeout("tcp", uri, timeout)
+		connection, err := net.DialTimeout("tcp", uri, time.Duration(1000*1000*timeout_in_milliseconds))
 		//fmt.Println(err)
 		if err != nil {
 			results <- ""
@@ -32,7 +26,7 @@ func worker(address chan string, results chan string) {
 	}
 }
 
-func scan_ports(hosts []string, startPort int, endPort int) []string {
+func scan_ports(hosts []string, startPort int, endPort int, timeout_in_milliseconds int) []string {
 	//1-65535
 	urls := make([]string, 0)
 
@@ -41,7 +35,7 @@ func scan_ports(hosts []string, startPort int, endPort int) []string {
 	results := make(chan string)
 
 	for i := 0; i < cap(address); i++ {
-		go worker(address, results) // now we have 10000 workers
+		go worker(address, results, timeout_in_milliseconds) // now we have 10000 workers
 	}
 
 	/*
@@ -76,9 +70,9 @@ func scan_ports(hosts []string, startPort int, endPort int) []string {
 	return urls
 }
 
-func ScanPorts(host string, startPort int, endPort int) string {
+func ScanPorts(host string, startPort int, endPort int, timeout_in_milliseconds int) string {
 	var hosts = []string{host}
-	urls := scan_ports(hosts, startPort, endPort)
+	urls := scan_ports(hosts, startPort, endPort, timeout_in_milliseconds)
 	json_result, err := json.Marshal(urls)
 	if err != nil {
 		return ""
@@ -115,10 +109,10 @@ func get_all_hosts_of_a_network(network string) []string {
 	return hosts
 }
 
-func ScanAllHosts(network string, startPort int, endPort int) string {
+func ScanAllHosts(network string, startPort int, endPort int, timeout_in_milliseconds int) string {
 	hosts := get_all_hosts_of_a_network(network)
 
-	urls := scan_ports(hosts, startPort, endPort)
+	urls := scan_ports(hosts, startPort, endPort, timeout_in_milliseconds)
 
 	json_result, err := json.Marshal(urls)
 	if err != nil {

@@ -7,7 +7,7 @@ import (
 
 func TestGetPortsFromAHost(t *testing.T) {
 	//var found string = ScanPorts("localhost", 0, 65535)
-	var found string = ScanPorts("localhost", 5000, 5002)
+	var found string = ScanPorts("localhost", 5000, 5002, 500)
 	log.Println(found)
 	if found == "" {
 		t.Fatalf("there should has ports")
@@ -24,7 +24,7 @@ func TestGetAllHostsFromNetwork(t *testing.T) {
 }
 
 func TestGetAllReachablePortsFromNetwork(t *testing.T) {
-	urls := ScanAllHosts("192.168.50.0/24", 5000, 5010)
+	urls := ScanAllHosts("192.168.49.0/24", 5000, 5030, 500)
 	log.Println(urls)
 	if len(urls) < 1 {
 		t.Fatalf("we should get a lot of hosts here")
@@ -32,8 +32,7 @@ func TestGetAllReachablePortsFromNetwork(t *testing.T) {
 }
 
 func TestGetAllReachablePortsFromNetwork2(t *testing.T) {
-	SetTimeOut(100)
-	urls := ScanAllHosts("192.168.50.0/16", 5000, 5010)
+	urls := ScanAllHosts("192.168.115.203/16", 5000, 5030, 500)
 	log.Println(urls)
 	if len(urls) < 1 {
 		t.Fatalf("we should get a lot of hosts here")

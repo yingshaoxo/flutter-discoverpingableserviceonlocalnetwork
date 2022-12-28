@@ -68,8 +68,9 @@ class DiscoverpingableserviceonlocalnetworkPlugin : FlutterPlugin, MethodCallHan
             var host: String? = call.argument<String>("host");
             var startPort: Int? = call.argument<Int>("startPort");
             var endPort: Int? = call.argument<Int>("endPort");
-            if (host!=null && startPort!=null && endPort!=null) {
-                var found: String = GoFind.scanPorts(host, startPort.toLong(), endPort.toLong())
+            var timeout_in_milliseconds: Int? = call.argument<Int>("timeout_in_milliseconds");
+            if (host!=null && startPort!=null && endPort!=null && timeout_in_milliseconds != null) {
+                var found: String = GoFind.scanPorts(host, startPort.toLong(), endPort.toLong(), timeout_in_milliseconds.toLong())
                 result.success(found)
                 return ;
             }
@@ -78,8 +79,9 @@ class DiscoverpingableserviceonlocalnetworkPlugin : FlutterPlugin, MethodCallHan
             var network: String? = call.argument<String>("network");
             var startPort: Int? = call.argument<Int>("startPort");
             var endPort: Int? = call.argument<Int>("endPort");
-            if (network!=null && startPort!=null && endPort!=null) {
-                var found: String = GoFind.scanAllHosts(network, startPort.toLong(), endPort.toLong())
+            var timeout_in_milliseconds: Int? = call.argument<Int>("timeout_in_milliseconds");
+            if (network!=null && startPort!=null && endPort!=null && timeout_in_milliseconds != null) {
+                var found: String = GoFind.scanAllHosts(network, startPort.toLong(), endPort.toLong(), timeout_in_milliseconds.toLong())
                 result.success(found)
                 return ;
             }

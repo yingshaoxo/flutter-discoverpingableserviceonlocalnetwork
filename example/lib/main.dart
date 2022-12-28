@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -18,7 +15,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  String ipWeFound = "";
+  String wifi_address = "";
 
   @override
   void initState() {
@@ -39,6 +36,14 @@ class _MyAppState extends State<MyApp> {
       platformVersion = 'Failed to get platform version.';
     }
 
+    try {
+      // wifi_address =
+      //     await Discoverpingableserviceonlocalnetwork.getWIFIaddress() ?? "";
+      wifi_address = "192.168.49.1/24";
+    } on PlatformException {
+      wifi_address = 'Failed to get wifi address.';
+    }
+
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
@@ -57,23 +62,26 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text(_platformVersion),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(_platformVersion),
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           child: Text("Find"),
           onPressed: () async {
-            var wifi_address =
-                await Discoverpingableserviceonlocalnetwork.getWIFIaddress();
-            if (wifi_address != null) {
-              //List<String>? hosts = await Discoverpingableserviceonlocalnetwork
-              //.findServicesInANetwork(wifi_address + "/24", 5000, 5100);
-              List<String>? hosts = await Discoverpingableserviceonlocalnetwork
-                  .findServicesInAHost(wifi_address, 0, 49151);
-              if (hosts != null) {
-                _platformVersion =
-                    "This is what I found: \n\n" + hosts.toString();
-                setState(() {});
-              }
+            _platformVersion = "searching...";
+            setState(() {});
+            // List<String>? hosts = await Discoverpingableserviceonlocalnetwork
+            //     .findServicesInAHost(wifi_address, 0, 49151, 500);
+            List<String>? hosts = await Discoverpingableserviceonlocalnetwork
+                .findServicesInANetwork(wifi_address, 5000, 5020, 500);
+            if (hosts != null) {
+              _platformVersion =
+                  "This is what I found: \n\n" + hosts.toString();
+              setState(() {});
             }
           },
         ),

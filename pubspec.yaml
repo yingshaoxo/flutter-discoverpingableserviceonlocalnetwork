@@ -1,6 +1,6 @@
 name: discoverpingableserviceonlocalnetwork
 description: Help you find services on local area network
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/yingshaoxo/flutter-discoverpingableserviceonlocalnetwork
 
 environment:

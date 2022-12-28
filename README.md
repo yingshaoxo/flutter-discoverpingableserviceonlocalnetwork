@@ -12,10 +12,17 @@ https://pub.dev/packages/discoverpingableserviceonlocalnetwork
       ref: master
 ```
 
-```bash
+```dart
 import 'package:discoverpingableserviceonlocalnetwork/discoverpingableserviceonlocalnetwork.dart';
 
+
 await Discoverpingableserviceonlocalnetwork.getWIFIaddress();
+
+await Discoverpingableserviceonlocalnetwork
+    .findServicesInAHost("192.168.49.1", 0, 49151, 500);
+
+await Discoverpingableserviceonlocalnetwork
+    .findServicesInANetwork("192.168.49.1/24", 5000, 8000, 500);
 ```
 
 
