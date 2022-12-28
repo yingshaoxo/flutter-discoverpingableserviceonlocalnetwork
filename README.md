@@ -26,7 +26,7 @@ await Discoverpingableserviceonlocalnetwork
 ```
 
 
-## Develop logs
+<!-- ## Develop logs
 
 ### aar error
 Direct local .aar file dependencies are not supported when building an AAR. The resulting AAR would be broken because the classes and Android resources from any local .aar file dependencies would not be packaged in the resulting AAR. Previous versions of the Android Gradle Plugin produce broken AARs in this case too (despite not throwing this error). The following direct local .aar file dependencies of the :discoverpingableserviceonlocalnetwork project caused this error: /home/yingshaoxo/work/discoverpingableserviceonlocalnetwork/android/libs/GoFind.aar
@@ -39,4 +39,4 @@ Solution: https://stackoverflow.com/a/57075972/8667243
 
 ### how to use golang to make a flutter plugin
 * https://youtu.be/668hBBd9wTU
-* https://yingshaoxo.blogspot.com/2021/07/how-to-use-golang-to-make-flutter-plugin.html
+* https://yingshaoxo.blogspot.com/2021/07/how-to-use-golang-to-make-flutter-plugin.html -->
