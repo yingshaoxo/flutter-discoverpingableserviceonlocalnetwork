@@ -1,1 +1,2 @@
+include ':discoverpingableserviceonlocalnetwork'
 rootProject.name = 'discoverpingableserviceonlocalnetwork'

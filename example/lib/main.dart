@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
             // List<String>? hosts = await Discoverpingableserviceonlocalnetwork
             //     .findServicesInAHost(wifi_address, 0, 49151, 500);
             List<String>? hosts = await Discoverpingableserviceonlocalnetwork
-                .findServicesInANetwork(wifi_address, 5000, 5020, 500);
+                .findServicesInANetwork(wifi_address, 0, 5020, 3000);
             if (hosts != null) {
               _platformVersion =
                   "This is what I found: \n\n" + hosts.toString();
