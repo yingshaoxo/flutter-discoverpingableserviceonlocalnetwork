@@ -1,10 +1,14 @@
 package GoFind
 
 import (
+	"bytes"
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net"
+	"net/http"
+	"strings"
 	"time"
 )
 
@@ -129,4 +133,114 @@ func FakePing(address string) bool {
 	}
 	connection.Close()
 	return true
+}
+
+func HttpGet(url string, timeout_in_milliseconds int) string {
+	client := http.Client{
+		Timeout: time.Duration(timeout_in_milliseconds) * time.Millisecond,
+	}
+	res, err := client.Get(url)
+	if err != nil {
+		return err.Error()
+	} else {
+		response_body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return err.Error()
+		}
+		return string(response_body)
+	}
+}
+
+func HttpPost(url string, json_string string, timeout_in_milliseconds int) string {
+	jsonBody := []byte(json_string)
+	bodyReader := bytes.NewReader(jsonBody)
+
+	reqest, err := http.NewRequest(http.MethodPost, url, bodyReader)
+	if err != nil {
+		return err.Error()
+	}
+	reqest.Header.Add("Content-Type", "application/json")
+
+	client := &http.Client{
+		Timeout: time.Duration(timeout_in_milliseconds) * time.Millisecond,
+	}
+	response, err := client.Do(reqest)
+	if err != nil {
+		return err.Error()
+	}
+	defer response.Body.Close()
+
+	response_body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return err.Error()
+	}
+	return string(response_body)
+}
+
+func post_worker(address chan string, jsonString string, results chan string, timeout_in_milliseconds int) {
+	for uri := range address {
+		results <- HttpPost(uri, jsonString, timeout_in_milliseconds)
+	}
+}
+
+func post_to_those_hosts_ports(hosts []string, startPort int, endPort int, subURL string, jsonString string, timeout_in_milliseconds int) []string {
+	//1-65535
+	result_list := make([]string, 0)
+
+	address := make(chan string, 65535)
+	results := make(chan string)
+
+	for i := 0; i < cap(address); i++ {
+		go post_worker(address, jsonString, results, timeout_in_milliseconds) // now we have 10000 workers
+	}
+
+	go func() {
+		for _, host := range hosts {
+			for i := startPort; i <= endPort; i++ {
+				if strings.HasPrefix(subURL, "/") {
+					address <- fmt.Sprintf("http://%s:%d%s", host, i, subURL)
+				} else {
+					address <- fmt.Sprintf("http://%s:%d/%s", host, i, subURL)
+				}
+			}
+		}
+	}()
+
+	for _, _ = range hosts {
+		for i := startPort; i <= endPort; i++ {
+			a_result := <-results
+			result_list = append(result_list, a_result)
+		}
+	}
+
+	close(address)
+	close(results)
+
+	return result_list
+}
+
+func Post_to_the_host(host string, startPort int, endPort int, subURL string, jsonString string, timeout_in_milliseconds int) string {
+	var hosts = []string{host}
+
+	result_list := post_to_those_hosts_ports(hosts, startPort, endPort, subURL, jsonString, timeout_in_milliseconds)
+
+	json_result, err := json.Marshal(result_list)
+	if err != nil {
+		return ""
+	} else {
+		return string(json_result)
+	}
+}
+
+func Post_to_the_network(network string, startPort int, endPort int, subURL string, jsonString string, timeout_in_milliseconds int) string {
+	hosts := get_all_hosts_of_a_network(network)
+
+	result_list := post_to_those_hosts_ports(hosts, startPort, endPort, subURL, jsonString, timeout_in_milliseconds)
+
+	json_result, err := json.Marshal(result_list)
+	if err != nil {
+		return ""
+	} else {
+		return string(json_result)
+	}
 }
